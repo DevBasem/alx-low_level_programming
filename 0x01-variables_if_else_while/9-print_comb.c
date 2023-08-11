@@ -10,14 +10,15 @@
  */
 int main(void)
 {
-int x = 48;
-int y = 0;
-while (x <= 57)
+int i;
+for (i = 0; i <= 9; i++)
 {
-putchar (x);
-if (y <= 9)
-putchar (44);
-putchar (' ');
+putchar(i + '0');
+if (i < 9)
+{
+putchar(',');
+putchar(' ');
+}
 }
 putchar('\n');
 return (0);
