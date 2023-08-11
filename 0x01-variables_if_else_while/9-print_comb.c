@@ -6,22 +6,17 @@
  *
  * Return: Always 0 (Success)
  *
- * this program prints the alphabet in lowercase
+ * this program prints single digit numbers
  */
 int main(void)
 {
-int x = 97;
-while (x <= 122)
-{
-if (x == 101 || x == 113)
-{
-x++;
-}
-else
+int x = 48;
+while (x <= 57)
 {
 putchar(x);
-x++;
-}
+++x;
+putchar(44);
+putchar(' ');
 }
 putchar('\n');
 return (0);
