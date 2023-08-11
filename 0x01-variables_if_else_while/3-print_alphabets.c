@@ -6,8 +6,8 @@
  *
  * Return: Always 0 (Success)
  *
- * this program prints the alphabet in lowercase
- * and uppercase using ASCII code 
+ * this program prints alphabet in lowercase
+ * and uppercase
  */
 int main(void)
 {
