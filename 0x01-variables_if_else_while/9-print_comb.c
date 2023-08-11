@@ -6,17 +6,17 @@
  *
  * Return: Always 0 (Success)
  *
- * this program prints single digit numbers
+ * this program prints combinations of single digit numbers
  */
 int main(void)
 {
 int x = 48;
 while (x <= 57)
 {
-putchar(x);
-++x;
-putchar(44);
-putchar(' ');
+putchar (x);
+putchar (44);
+putchar (' ');
+x++;
 }
 putchar('\n');
 return (0);
