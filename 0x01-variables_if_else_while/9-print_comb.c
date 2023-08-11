@@ -11,12 +11,13 @@
 int main(void)
 {
 int x = 48;
+int y = 0;
 while (x <= 57)
 {
 putchar (x);
+if (y <= 9)
 putchar (44);
 putchar (' ');
-x++;
 }
 putchar('\n');
 return (0);

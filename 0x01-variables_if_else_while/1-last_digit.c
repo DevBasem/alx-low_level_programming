@@ -6,9 +6,10 @@
  *
  * Return: Always 0 (Success)
  *
- * this program prints last digit of 
- * a random number and checks for some
- * conditions on that number
+ * this program prints last digit
+ * of a random number and checks
+ * for someconditions on that number
+ *
  */
 int main(void)
 {
