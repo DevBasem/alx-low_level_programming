@@ -6,9 +6,9 @@
  *
  * Return: Always 0 (Success)
  *
- * this program prints out a random number
- * and checks if the number is positive or
- * negative or equal to zero
+ * this program prints last digit of 
+ * a random number and checks for some
+ * conditions on that number
  */
 int main(void)
 {
