@@ -12,8 +12,8 @@ int i;
 char msg[] = "_putchar";
 for (i = 0; i < 8; i++)
 {
-putchar (msg[i]);
+_putchar (msg[i]);
 }
-putchar ('\n');
+_putchar ('\n');
 return (0);
 }
