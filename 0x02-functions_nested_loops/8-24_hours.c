@@ -21,18 +21,18 @@ for (z = 48; z <= 57; z++)
 for (j = 48; j <= 57; j++)
 {
 k++;
-putchar (x);
-putchar (y);
-putchar (':');
-putchar (z);
-putchar (j);
-putchar ('\n');
+_putchar (x);
+_putchar (y);
+_putchar (':');
+_putchar (z);
+_putchar (j);
+_putchar ('\n');
 if (z == 53 && j == 57)
 {
 z = 57;
 j = 57;
 }
-if (k == 1439)
+if (k == 1440)
 {
 x = 57;
 y = 57;
@@ -43,5 +43,4 @@ j = 57;
 }
 }
 }
-putchar ('\n');
 }
