@@ -18,6 +18,6 @@ tS += sum;
 fib1 = fib2;
 fib2 = sum;
 }
-printf("%.0f\n", total_sum);
+printf("%.0f\n", tS);
 return (0);
 }
