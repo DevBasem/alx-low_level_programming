@@ -38,6 +38,7 @@ i10s--;
 }
 printf("%lu", f1);
 sum = (f1 + f2) % max;
+sumo = f1o + f2o + (f1 + f2) / max;
 f1 = f2;
 f1o = f2o;
 f2 = sum;
