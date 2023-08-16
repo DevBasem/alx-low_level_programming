@@ -6,18 +6,18 @@
  */
 int main(void)
 {
-int fib[50];
-int i;
-unsigned long fib[0] = 1;
-unsigned long fib[1] = 2;
-for (i = 2; i < 50; i++)
+int c;
+unsigned long fib1 = 0, fib2 = 1, sum;
+for (c = 0; i < 50; i++)
 {
-fib[i] = fib[i - 1] + fib[i - 2];
+sum = fib1 + fib2;
+printf("%lu", sum);
+fib1 = fib2
+fib2 = sum;
+if (c == 49)
+printf("\n");
+else
+printf(", ");
 }
-for (i = 0; i < 49; i++)
-{
-printf("%d, ", fib[i]);
-}
-printf("%d\n", fib[49]);
 return (0);
 }
