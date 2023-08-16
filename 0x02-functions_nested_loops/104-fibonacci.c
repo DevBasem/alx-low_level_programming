@@ -25,7 +25,7 @@ return (length);
 int main(void)
 {
 int c, i10s;
-unsigned long f1 = 1, f2 = 2, sum, max = 100000000, f1o = 0, sumo = 0;
+unsigned long f1 = 1, f2 = 2, sum, max = 100000000, f1o = 0, f2o = 0, sumo = 0;
 for (c = 1; c <= 98; c++)
 {
 if (f1o > 0)
@@ -45,7 +45,7 @@ f2o = sumo;
 if (c != 98)
 printf(", ");
 else
-print("\n");
+printf("\n");
 }
 return (0);
 }
