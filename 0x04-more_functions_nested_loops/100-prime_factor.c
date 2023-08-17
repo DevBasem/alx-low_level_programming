@@ -1,32 +1,26 @@
 #include <stdio.h>
 /**
- * findLargestPrimeFactor - finds the largest prime factor of a number.
+ * largestPrimeFactor - finds the largest prime factor of a number.
  * @n : is the number to check.
  *
  * Return: the largest prime factor.
  */
-long long findLargestPrimeFactor(long long n)
+long largestPrimeFactor(long n)
 {
-	long long largestPrime = -1;
+	long factor = 2;
 
-	while (n % 2 == 0)
+	while (n > 1)
 	{
-		largestPrime = 2;
-		n /= 2;
-	}
-	for (long long i = 3; i * i <= n; i += 2)
-	{
-		while (n % i == 0)
+		if (n % factor == 0)
 		{
-			largestPrime = i;
-			n /= i;
+			n /= factor;
+		}
+		else
+		{
+			factor++;
 		}
 	}
-	if (n > 2)
-	{
-		largestPrime = n;
-	}
-	return (largestPrime);
+	return (factor);
 }
 /**
  * main - check the code
@@ -35,9 +29,10 @@ long long findLargestPrimeFactor(long long n)
  */
 int main(void)
 {
-	long long number = 612852475143;
-	long long largestPrime = findLargestPrimeFactor(number);
+	long number = 612852475143;
+	long result = largestPrimeFactor(number);
 
-	printf("%lld\n", largestPrime);
+	printf("%ld\n", result);
+
 	return (0);
 }
