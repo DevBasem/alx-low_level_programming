@@ -8,13 +8,19 @@ void more_numbers(void)
 {
 	int i;
 	int j;
+	int dblNum;
 
 	for (j = 0; j <= 9; j++)
 	{
 		for (i = 0; i <= 14; i++)
 		{
-		_putchar((i > 9) ? (i / 10) + 48 : i + 48);
-		_putchar((i > 9) ? (i % 10) + 48 : '\0');
+		dblNum = i;
+		if (i > 9)
+		{
+		_putchar(49);
+		dblNum = i % 10;
+		}
+		_putchar (dblNum + 48);
 		}
 		_putchar ('\n');
 	}
