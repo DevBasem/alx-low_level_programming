@@ -7,56 +7,28 @@
  */
 void print_number(int n)
 {
-	int x;
+	int divisor = 1000;
+	int leading_zeros = 1;
 
-	if (n > 0)
-	{
-		if (n > 9 && n <= 99)
-		{
-			_putchar((n / 10) + 48);
-			_putchar((n % 10) + 48);
-		}
-		if (n > 99 && n <= 999)
-		{
-			_putchar((n / 100) + 48);
-			_putchar((n / 10) % 10 + 48);
-			_putchar((n % 10) + 48);
-		}
-		if (n > 999 && n <= 9999)
-		{
-			_putchar((n / 1000) + 48);
-			_putchar((n / 100) % 10 + 48);
-			_putchar((n / 10) % 10 + 48);
-			_putchar((n % 10) + 48);
-		}
-	}
 	if (n < 0)
 	{
-		x = -n;
-		if (n < -9 && n >= -99)
+		_putchar('-');
+		n = -n;
+	}
+	while (divisor > 0)
 		{
-			_putchar(45);
-			_putchar((x / 10) + 48);
-			_putchar((x % 10) + 48);
-		}
-		if (n < -99 && n <= -999)
+		int digit = n / divisor;
+
+		n %= divisor;
+		divisor /= 10;
+		if (digit != 0 || !leading_zeros)
 		{
-			_putchar(45);
-			_putchar((x / 100) + 48);
-			_putchar((x / 10) % 10 + 48);
-			_putchar((x % 10) + 48);
-		}
-		if (n < -999 && n >= -9999)
-		{
-			_putchar(45);
-			_putchar((x / 1000) + 48);
-			_putchar((x / 100) % 10 + 48);
-			_putchar((x / 10) % 10 + 48);
-			_putchar((x % 10) + 48);
+			_putchar(digit + '0');
+			leading_zeros = 0;
 		}
 	}
-	if (n == 0)
+	if (leading_zeros)
 	{
-		_putchar(48);
+		_putchar('0');
 	}
 }
