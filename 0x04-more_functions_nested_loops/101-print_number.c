@@ -7,28 +7,14 @@
  */
 void print_number(int n)
 {
-	int divisor = 1000;
-	int leading_zeros = 1;
+	unsigned int pN = n;
 
 	if (n < 0)
 	{
 		_putchar('-');
-		n = -n;
+		pN = -pN;
 	}
-	while (divisor > 0)
-		{
-		int digit = n / divisor;
-
-		n %= divisor;
-		divisor /= 10;
-		if (digit != 0 || !leading_zeros)
-		{
-			_putchar(digit + '0');
-			leading_zeros = 0;
-		}
-	}
-	if (leading_zeros)
-	{
-		_putchar('0');
-	}
+	if ((pN / 10) > 0)
+		print_number(pN / 10);
+	_putchar((pN % 10) + 48);
 }
