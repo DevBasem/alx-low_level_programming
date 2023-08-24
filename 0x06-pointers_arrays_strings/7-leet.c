@@ -26,10 +26,7 @@ char *leet(char *input)
 			}
 		}
 
-		if (!replaced)
-		{
-			input++;
-		}
+		input += !replaced;
 	}
 
 	return (original);
