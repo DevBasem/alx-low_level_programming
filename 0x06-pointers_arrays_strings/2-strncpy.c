@@ -3,6 +3,7 @@
  * *_strncpy - copies a string..
  * @dest : string 2
  * @src : string 1
+ * @n : number of bytes from src
  *
  * Return: the two string combined
  */
@@ -17,7 +18,7 @@ char *_strncpy(char *dest, char *src, int n)
 		dest++;
 		n--;
 	}
-	while (n > 0) 
+	while (n > 0)
 	{
 		*dest = '\0';
 		dest++;

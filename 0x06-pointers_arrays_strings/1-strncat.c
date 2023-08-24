@@ -3,6 +3,7 @@
  * *_strncat - concatenates two strings.
  * @dest : string 2
  * @src : string 1
+ * @n : number of bytes from src
  *
  * Return: the two string combined
  */
