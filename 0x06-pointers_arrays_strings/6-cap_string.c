@@ -1,53 +1,35 @@
 #include "main.h"
+
 /**
- * is_separator - checks for sperator.
- * @c: element to check
- * Return: true or false
+ * cap_string - Capitalizes all words of a string.
+ * @a: The string to be capitalized.
+ *
+ * Return: capitalized all words
  */
-bool is_separator(char c)
+char *cap_string(char *a)
 {
-	char separators[] = " \t\n,;.!?\"(){}";
-	int i;
+	int index = 0;
 
-	for (i = 0; separators[i] != '\0'; i++)
+	while (a[index])
 	{
-		if (c == separators[i])
-		{
-			return (true);
-		}
+		while (!(a[index] >= 'a' && a[index] <= 'z'))
+			index++;
+		if (a[index - 1] == ' ' ||
+				a[index - 1] == '\t' ||
+				a[index - 1] == '\n' ||
+				a[index - 1] == ',' ||
+				a[index - 1] == ';' ||
+				a[index - 1] == '.' ||
+				a[index - 1] == '!' ||
+				a[index - 1] == '?' ||
+				a[index - 1] == '"' ||
+				a[index - 1] == '(' ||
+				a[index - 1] == ')' ||
+				a[index - 1] == '{' ||
+				a[index - 1] == '}' ||
+				index == 0)
+			a[index] -= 32;
+		index++;
 	}
-	return (false);
-}
-/**
- * *cap_string - changes words to uppercase.
- * @str: string to convert.
- * Return: uppercase string
- */
-char *cap_string(char *str)
-{
-	bool new_word = true;
-	char *saveStr = str;
-
-	while (*str != '\0')
-	{
-		if (is_separator(*str))
-		{
-			new_word = true;
-		}
-		else
-		{
-			if (new_word)
-			{
-				*str = toupper(*str);
-				new_word = false;
-			}
-			else
-			{
-				*str = tolower(*str);
-			}
-		}
-		str++;
-	}
-
-	return (saveStr);
+	return (a);
 }
