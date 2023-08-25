@@ -1,35 +1,30 @@
 #include "main.h"
 /**
  * *rot13 - encodes a string using rot13.
- * @input: string to encode.
+ * @s: string to encode.
  * Return: encoded string.
  */
-char *rot13(char *input) {
-    if (input == NULL) {
-        return NULL;
-    }
+char *rot13(char *s)
+{
+	char *p = s;
 
-    char *result = (char *)malloc(strlen(input) + 1);
-    if (result == NULL) {
-        return NULL;
-    }
+	while (*p)
+	{
+		char c = *p;
 
-    for (int i = 0; input[i] != '\0'; i++) {
-        int diff = 0;
+		int shift = 0;
+		if ((c >= 'a' && c <= 'z'))
+		{
+			shift = c <= 'm' ? 13 : -13;
+		}
+		else if ((c >= 'A' && c <= 'Z'))
+		{
+			shift = c <= 'M' ? 13 : -13;
+		}
 
-        if ('a' <= input[i] && input[i] <= 'z') {
-            diff = 'a';
-        } else if ('A' <= input[i] && input[i] <= 'Z') {
-            diff = 'A';
-        }
+		*p += shift;
+		p++;
+	}
 
-        if (diff != 0) {
-            result[i] = (input[i] - diff + 13) % 26 + diff;
-        } else {
-            result[i] = input[i];
-        }
-    }
-
-    result[strlen(input)] = '\0';
-    return result;
+	return (s);
 }
