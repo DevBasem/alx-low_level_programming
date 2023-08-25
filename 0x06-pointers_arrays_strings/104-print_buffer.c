@@ -1,46 +1,47 @@
 #include "main.h"
 /**
- * print_buffer - function that prints a buffer.
+ * print_buffer - prints buffer
  * @b: buffer
- * @size: bytes of the buffer
- *
- * Return: printed buffer
+ * @size: size
+ * Return: void
  */
 void print_buffer(char *b, int size)
 {
-	int i, j;
+	int k, j, i;
 
-	for (i = 0; i < size || (size <= 0 && i == 0); i += 10)
+	k = 0;
+
+	if (size <= 0)
 	{
-		printf("%08x: ", i);
-
-		for (j = 0; j < 10; j++)
-		{
-			if (i + j < size)
-			{
-				printf("%02x ", (unsigned char)b[i + j]);
-			}
-			else
-			{
-				printf("   ");
-			}
-		}
-
-		for (j = 0; j < 10; j++)
-		{
-			if (i + j < size)
-			{
-				if (b[i + j] >= 32 && b[i + j] <= 126)
-				{
-					printf("%c", b[i + j]);
-				}
-				else
-				{
-					printf(".");
-				}
-			}
-		}
-
 		printf("\n");
+		return;
+	}
+	while (k < size)
+	{
+		j = size - k < 10 ? size - k : 10;
+		printf("%08x: ", k);
+		for (i = 0; i < 10; i++)
+		{
+			if (i < j)
+				printf("%02x", *(b + k + i));
+			else
+				printf("  ");
+			if (i % 2)
+			{
+				printf(" ");
+			}
+		}
+		for (i = 0; i < j; i++)
+		{
+			int c = *(b + k + i);
+
+			if (c < 32 || c > 132)
+			{
+				c = '.';
+			}
+			printf("%c", c);
+		}
+		printf("\n");
+		k += 10;
 	}
 }
