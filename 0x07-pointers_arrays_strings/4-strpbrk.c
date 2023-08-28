@@ -1,10 +1,10 @@
 #include "main.h"
 /**
- * _strspn - gets the length of a prefix substring.
+ * *_strpbrk - searches a string for any of a set of bytes.
  * @s: string.
  * @accept: accepted characters.
  *
- * Return: number of accepted characters.
+ * Return: string returned.
  */
 char *_strpbrk(char *s, char *accept)
 {
