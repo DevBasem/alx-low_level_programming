@@ -7,7 +7,6 @@
  * @argc: arguments count
  * @argv: arguments vector
  *
- *
  * Return: Always 0.
  */
 int main(int argc, char *argv[])
@@ -16,9 +15,14 @@ int main(int argc, char *argv[])
 	int y = 0;
 	int sum = 0;
 
+	if (argc == 1)
+	{
+		printf("0\n");
+		return (0);
+	}
 	for (x = 1; x < argc; x++)
 	{
-		if (!isdigit(*argv[x]) || *argv[x] < 0)
+		if (!isdigit(*argv[x]) || atoi(argv[x]) <= 0)
 		{
 			y++;
 		}
