@@ -6,9 +6,19 @@
 #include <stdbool.h>
 #include <ctype.h>
 int _putchar(char c);
-void *malloc_checked(unsigned int b);
-char *string_nconcat(char *s1, char *s2, unsigned int n);
-void *_calloc(unsigned int nmemb, unsigned int size);
-int *array_range(int min, int max);
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
+/**
+ * struct dog - object for dog.
+ * @name: name of the cute dog.
+ * @age: age of the cute dog.
+ * @owner: owner of the cute dog.
+ *
+ * Description: cute dog home.
+ */
+struct dog
+{
+char *name;
+float age;
+char *owner;
+};
+void init_dog(struct dog *d, char *name, float age, char *owner);
 #endif
