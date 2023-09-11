@@ -11,9 +11,11 @@ int main(void)
 {
     int i;
     int j;
+    int k;
 
     i = ABS(-98) * 10;
-    j = ABS(98) * 10;
-    printf("%d, %d\n", i, j);
+    j = ABS(0) * 10;
+    k = ABS(98) * 10;
+    printf("%d, %d, %d\n", i, j, k);
     return (0);
 }
