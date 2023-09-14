@@ -2,33 +2,18 @@
 #include <stdlib.h>
 
 /**
- * print_opcodes - Prints the opcodes of the main function.
- * @num_bytes: The number of bytes to print.
- */
-void print_opcodes(int num_bytes)
-{
-	unsigned char *ptr = (unsigned char *)print_opcodes;
-	int i;
-
-	for (i = 0; i < num_bytes; i++)
-	{
-		printf("%02x", ptr[i]);
-	}
-
-	printf("\n");
-}
-
-/**
- * main - Entry point of the program.
- * @argc: The number of command-line arguments.
- * @argv: An array of pointers to the arguments.
+ * main - Prints opcodes from the main function in hexadecimal format
+ * @argc: Number of command-line arguments
+ * @argv: Array of command-line argument strings
  *
- * Return: (0) on success, (1) for incorrect number
- * of arguments, (2) for negative bytes.
+ * Return:
+ *  0 on success (opcodes printed in hexadecimal)
+ *  1 if the argument count is incorrect (error message displayed)
+ *  2 if the number of bytes is negative (error message displayed)
  */
 int main(int argc, char *argv[])
 {
-	int num_bytes;
+	int i;
 
 	if (argc != 2)
 	{
@@ -36,15 +21,27 @@ int main(int argc, char *argv[])
 		return (1);
 	}
 
-	num_bytes = atoi(argv[1]);
+	int bytes = atoi(argv[1]);
 
-	if (num_bytes < 0)
+	if (bytes < 0)
 	{
 		printf("Error\n");
 		return (2);
 	}
 
-	print_opcodes(num_bytes);
+	char *main_ptr = (char *)main;
+
+	for (i = 0; i < bytes; i++)
+	{
+		if (i == bytes - 1)
+		{
+			printf("%02hhx\n", main_ptr[i]);
+		}
+		else
+		{
+			printf("%02hhx ", main_ptr[i]);
+		}
+	}
 
 	return (0);
 }
