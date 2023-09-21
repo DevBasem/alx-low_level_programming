@@ -1,5 +1,5 @@
 section .data
-    format db "Hello, Holberton",10,0
+    hello db "Hello, Holberton",10,0
 
 section .text
     global main
@@ -7,10 +7,8 @@ section .text
 extern printf
 
 main:
-    mov rdi, format
-    xor rax, rax
+    sub rsp, 8
+    mov rdi, hello
     call printf
-
-    mov rax, 60
-    xor rdi, rdi
-    syscall
+    add rsp, 8
+    ret
