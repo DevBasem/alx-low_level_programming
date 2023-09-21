@@ -1,8 +1,9 @@
 #include "lists.h"
 
 /**
- * list_len - returns the number of elements in a linked list_t list.
- * @h: elements list.
+ * add_node - adds a new node at the beginning of a list_t list.
+ * @head: elements list.
+ * @str: used string.
  *
  * Return: number of nodes.
  */
@@ -27,5 +28,5 @@ list_t *add_node(list_t **head, const char *str)
 	new_node->next = *head;
 	*head = new_node;
 
-	return new_node;
+	return (new_node);
 }
