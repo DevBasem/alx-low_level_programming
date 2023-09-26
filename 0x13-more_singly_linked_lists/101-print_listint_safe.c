@@ -1,6 +1,53 @@
 #include "lists.h"
 
 /**
+ * find_loop_length - Counts the number of unique nodes
+ * in a looped listint_t linked list.
+ * @head: A pointer to the head of the listint_t to check.
+ *
+ * Return: If the list is not looped - 0.
+ */
+size_t find_loop_length(const listint_t *head)
+{
+	const listint_t *slow_runner, *fast_runner;
+	size_t nodes_count = 1;
+
+	if (!head || !head->next)
+		return (0);
+
+	slow_runner = head->next;
+	fast_runner = (head->next)->next;
+
+	while (fast_runner)
+	{
+		if (slow_runner == fast_runner)
+		{
+			slow_runner = head;
+			while (slow_runner != fast_runner)
+			{
+				nodes_count++;
+				slow_runner = slow_runner->next;
+				fast_runner = fast_runner->next;
+			}
+
+			slow_runner = slow_runner->next;
+			while (slow_runner != fast_runner)
+			{
+				nodes_count++;
+				slow_runner = slow_runner->next;
+			}
+
+			return (nodes_count);
+		}
+
+		slow_runner = slow_runner->next;
+		fast_runner = (fast_runner->next)->next;
+	}
+
+	return (0);
+}
+
+/**
  * print_listint_safe - Prints a listint_t list safely.
  * @head: A pointer to the head of the listint_t list.
  *
@@ -8,42 +55,28 @@
  */
 size_t print_listint_safe(const listint_t *head)
 {
-	const listint_t *walker = head, *runner = head;
-	size_t count = 0;
+	size_t nodes_count, index = 0;
 
-	while (walker && runner && runner->next)
+	nodes_count = find_loop_length(head);
+
+	if (nodes_count == 0)
 	{
-		printf("[%p] %d\n", (void *)walker, walker->n);
-		count++;
-		walker = walker->next;
-		runner = runner->next->next;
-		if (walker == runner)
+		for (; head != NULL; nodes_count++)
 		{
-			walker = head;
-			while (walker != runner)
-			{
-				count++;
-				printf("[%p] %d\n", (void *)walker, walker->n);
-				walker = walker->next;
-				runner = runner->next;
-			}
-			walker = walker->next;
-			while (walker != runner)
-			{
-				count++;
-				printf("[%p] %d\n", (void *)walker, walker->n);
-				walker = walker->next;
-			}
-
-			printf("-> [%p] %d\n", (void *)walker, walker->n);
-			return (count);
+			printf("[%p] %d\n", (void *)head, head->n);
+			head = head->next;
 		}
 	}
-	while (walker)
+	else
 	{
-		printf("[%p] %d\n", (void *)walker, walker->n);
-		count++;
-		walker = walker->next;
+		for (index = 0; index < nodes_count; index++)
+		{
+			printf("[%p] %d\n", (void *)head, head->n);
+			head = head->next;
+		}
+
+		printf("-> [%p] %d\n", (void *)head, head->n);
 	}
-	return (count);
+
+	return (nodes_count);
 }
