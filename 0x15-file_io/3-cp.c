@@ -28,6 +28,8 @@ int main(int ac, char **av)
 	int fd_from, fd_to;
 	ssize_t n;
 	char buffer[BUF_SIZE];
+	struct stat st;
+	mode_t dest_file_permissions;
 
 	if (ac != 3)
 		error_exit(97, "Usage: cp file_from file_to\n");
@@ -36,10 +38,14 @@ int main(int ac, char **av)
 	if (fd_from == -1)
 		error_exit(98, "Error: Can't read from file %s\n", av[1]);
 
-	fd_to = open(av[2], O_WRONLY | O_CREAT | O_TRUNC,
-			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	fd_to = open(av[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd_to == -1)
 		error_exit(99, "Error: Can't write to %s\n", av[2]);
+
+	if (stat(av[2], &st) == -1)
+		error_exit(99, "Error: Can't get file status for %s\n", av[2]);
+
+	dest_file_permissions = st.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
 
 	while ((n = read(fd_from, buffer, BUF_SIZE)) > 0)
 	{
@@ -52,6 +58,9 @@ int main(int ac, char **av)
 
 	if (close(fd_from) == -1 || close(fd_to) == -1)
 		error_exit(100, "Error: Can't close fd\n");
+
+	if (chmod(av[2], dest_file_permissions) == -1)
+		error_exit(99, "Error: Can't set permissions for %s\n", av[2]);
 
 	return (0);
 }

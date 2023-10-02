@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #define BUF_SIZE 1024
+#define FILE_PERMISSIONS (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
 ssize_t read_textfile(const char *filename, size_t letters);
 int create_file(const char *filename, char *text_content);
 int append_text_to_file(const char *filename, char *text_content);
