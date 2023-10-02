@@ -1,100 +1,82 @@
 #include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+char *allocate_buffer(char *file);
+void close_descriptor(int fd);
 
 /**
- * exit_with_error - Prints an error message and exits with the given code.
- * @code: The exit code.
- * @format: The format string for the error message.
- * @...: Additional arguments for the format string.
- */
-void exit_with_error(int code, const char *format, ...)
-{
-    va_list args;
-
-    va_start(args, format);
-    dprintf(STDERR_FILENO, format, args);
-    va_end(args);
-    exit(code);
-}
-
-/**
- * create_buffer - Allocates a buffer for reading/writing.
+ * allocate_buffer - Allocates 1024 bytes for a buffer.
+ * @file: The name of the file the buffer is associated with.
  *
- * Return: A pointer to the newly-allocated buffer.
+ * Returns: A pointer to the newly-allocated buffer.
  */
-char *create_buffer()
+char *allocate_buffer(char *file)
 {
-    char *buffer = malloc(BUFFER_SIZE);
+    char *buffer = malloc(1024 * sizeof(char));
 
     if (buffer == NULL)
     {
-        exit_with_error(99, "Error: Unable to allocate buffer\n");
+        dprintf(STDERR_FILENO, "Error: Can't allocate buffer for %s\n", file);
+        exit(99);
     }
-
     return (buffer);
 }
 
 /**
- * close_file_descriptor - Closes a file descriptor.
+ * close_descriptor - Closes a file descriptor.
  * @fd: The file descriptor to be closed.
  */
-void close_file_descriptor(int fd)
+void close_descriptor(int fd)
 {
     if (close(fd) == -1)
     {
-        dprintf(STDERR_FILENO, "Error: Can't close file descriptor %d\n", fd);
+        dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", fd);
         exit(100);
     }
 }
 
 /**
  * main - Copies the contents of a file to another file.
- * @argc: The number of arguments supplied to the program.
- * @argv: An array of pointers to the arguments.
+ * @argc: The number of command-line arguments.
+ * @argv: An array of pointers to the command-line arguments.
  *
- * Return: 0 on success, or the appropriate error code on failure.
+ * Returns: 0 on success.
+ *
+ * Description: Exits with specific error codes for different failures:
+ *   97 - Incorrect number of arguments
+ *   98 - Unable to read from file_from
+ *   99 - Unable to write to file_to
+ *   100 - Unable to close file descriptors
  */
 int main(int argc, char *argv[])
 {
-    int source_fd, destination_fd;
-    ssize_t bytes_read;
+    int source_fd, destination_fd, bytes_read;
     char *buffer;
 
     if (argc != 3)
     {
-        exit_with_error(97, "Usage: cp source_file destination_file\n");
+        dprintf(STDERR_FILENO, "Usage: cp source_file destination_file\n");
+        exit(97);
     }
 
-    buffer = create_buffer();
-
+    buffer = allocate_buffer(argv[2]);
     source_fd = open(argv[1], O_RDONLY);
-    if (source_fd == -1)
-    {
-        exit_with_error(98, "Error: Can't read from source file %s\n", argv[1]);
-    }
+    destination_fd = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
 
-    destination_fd = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (destination_fd == -1)
+    while ((bytes_read = read(source_fd, buffer, 1024)) > 0)
     {
-        exit_with_error(99, "Error: Can't write to destination file %s\n", argv[2]);
-    }
-
-    while ((bytes_read = read(source_fd, buffer, BUFFER_SIZE)) > 0)
-    {
-        ssize_t bytes_written = write(destination_fd, buffer, bytes_read);
-        if (bytes_written != bytes_read)
+        if (bytes_read == -1 || write(destination_fd, buffer, bytes_read) == -1)
         {
-            exit_with_error(99, "Error: Incomplete write to destination file %s\n", argv[2]);
+            dprintf(STDERR_FILENO, "Error: File operation failed\n");
+            free(buffer);
+            exit(99);
         }
     }
 
-    if (bytes_read == -1)
-    {
-        exit_with_error(98, "Error: Can't read from source file %s\n", argv[1]);
-    }
-
-    close_file_descriptor(source_fd);
-    close_file_descriptor(destination_fd);
     free(buffer);
+    close_descriptor(source_fd);
+    close_descriptor(destination_fd);
 
     return (0);
 }
