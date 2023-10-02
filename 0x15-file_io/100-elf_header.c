@@ -6,43 +6,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void checkElf(unsigned char *eIdent);
-void printMagicNumbers(unsigned char *eIdent);
-void printClass(unsigned char *eIdent);
-void printData(unsigned char *eIdent);
-void printVersion(unsigned char *eIdent);
-void printOsAbi(unsigned char *eIdent);
-void printAbiVersion(unsigned char *eIdent);
-void printElfType(unsigned int eType, unsigned char *eIdent);
-void printEntryPoint(unsigned long int eEntry, unsigned char *eIdent);
-void closeElf(int elf);
+void checkIsElfFile(unsigned char *magicNumbers);
+void printMagicNumbers(unsigned char *magicNumbers);
+void printElfClass(unsigned char *magicNumbers);
+void printDataEncoding(unsigned char *magicNumbers);
+void printElfVersion(unsigned char *magicNumbers);
+void printOsAbi(unsigned char *magicNumbers);
+void printAbiVersion(unsigned char *magicNumbers);
+void printElfType(unsigned int elfType, unsigned char *magicNumbers);
+void printEntryPoint(unsigned long int entryPoint, unsigned char *magicNumbers);
+void closeElfFile(int fileDescriptor);
 
-void checkElf(unsigned char *eIdent)
-{
+void checkIsElfFile(unsigned char *magicNumbers) {
 	int index;
 
-	for (index = 0; index < 4; index++)
-	{
-		if (eIdent[index] != 127 &&
-				eIdent[index] != 'E' &&
-				eIdent[index] != 'L' &&
-				eIdent[index] != 'F')
-		{
+	for (index = 0; index < 4; index++) {
+		if (magicNumbers[index] != 127 &&
+				magicNumbers[index] != 'E' &&
+				magicNumbers[index] != 'L' &&
+				magicNumbers[index] != 'F') {
 			dprintf(STDERR_FILENO, "Error: Not an ELF file\n");
 			exit(98);
 		}
 	}
 }
 
-void printMagicNumbers(unsigned char *eIdent)
-{
+void printMagicNumbers(unsigned char *magicNumbers) {
 	int index;
 
 	printf(" Magic: ");
 
-	for (index = 0; index < EI_NIDENT; index++)
-	{
-		printf("%02x", eIdent[index]);
+	for (index = 0; index < EI_NIDENT; index++) {
+		printf("%02x", magicNumbers[index]);
 
 		if (index == EI_NIDENT - 1)
 			printf("\n");
@@ -51,12 +46,10 @@ void printMagicNumbers(unsigned char *eIdent)
 	}
 }
 
-void printClass(unsigned char *eIdent)
-{
+void printElfClass(unsigned char *magicNumbers) {
 	printf(" Class: ");
 
-	switch (eIdent[EI_CLASS])
-	{
+	switch (magicNumbers[EI_CLASS]) {
 		case ELFCLASSNONE:
 			printf("none\n");
 			break;
@@ -67,16 +60,14 @@ void printClass(unsigned char *eIdent)
 			printf("ELF64\n");
 			break;
 		default:
-			printf("<unknown: %x>\n", eIdent[EI_CLASS]);
+			printf("<unknown: %x>\n", magicNumbers[EI_CLASS]);
 	}
 }
 
-void printData(unsigned char *eIdent)
-{
+void printDataEncoding(unsigned char *magicNumbers) {
 	printf(" Data: ");
 
-	switch (eIdent[EI_DATA])
-	{
+	switch (magicNumbers[EI_DATA]) {
 		case ELFDATANONE:
 			printf("none\n");
 			break;
@@ -87,16 +78,14 @@ void printData(unsigned char *eIdent)
 			printf("2's complement, big endian\n");
 			break;
 		default:
-			printf("<unknown: %x>\n", eIdent[EI_CLASS]);
+			printf("<unknown: %x>\n", magicNumbers[EI_CLASS]);
 	}
 }
 
-void printVersion(unsigned char *eIdent)
-{
-	printf(" Version: %d", eIdent[EI_VERSION]);
+void printElfVersion(unsigned char *magicNumbers) {
+	printf(" Version: %d", magicNumbers[EI_VERSION]);
 
-	switch (eIdent[EI_VERSION])
-	{
+	switch (magicNumbers[EI_VERSION]) {
 		case EV_CURRENT:
 			printf(" (current)\n");
 			break;
@@ -106,12 +95,10 @@ void printVersion(unsigned char *eIdent)
 	}
 }
 
-void printOsAbi(unsigned char *eIdent)
-{
+void printOsAbi(unsigned char *magicNumbers) {
 	printf(" OS/ABI: ");
 
-	switch (eIdent[EI_OSABI])
-	{
+	switch (magicNumbers[EI_OSABI]) {
 		case ELFOSABI_NONE:
 			printf("UNIX - System V\n");
 			break;
@@ -143,24 +130,21 @@ void printOsAbi(unsigned char *eIdent)
 			printf("Standalone App\n");
 			break;
 		default:
-			printf("<unknown: %x>\n", eIdent[EI_OSABI]);
+			printf("<unknown: %x>\n", magicNumbers[EI_OSABI]);
 	}
 }
 
-void printAbiVersion(unsigned char *eIdent)
-{
-	printf(" ABI Version: %d\n", eIdent[EI_ABIVERSION]);
+void printAbiVersion(unsigned char *magicNumbers) {
+	printf(" ABI Version: %d\n", magicNumbers[EI_ABIVERSION]);
 }
 
-void printElfType(unsigned int eType, unsigned char *eIdent)
-{
-	if (eIdent[EI_DATA] == ELFDATA2MSB)
-		eType >>= 8;
+void printElfType(unsigned int elfType, unsigned char *magicNumbers) {
+	if (magicNumbers[EI_DATA] == ELFDATA2MSB)
+		elfType >>= 8;
 
 	printf(" Type: ");
 
-	switch (eType)
-	{
+	switch (elfType) {
 		case ET_NONE:
 			printf("NONE (None)\n");
 			break;
@@ -177,77 +161,69 @@ void printElfType(unsigned int eType, unsigned char *eIdent)
 			printf("CORE (Core file)\n");
 			break;
 		default:
-			printf("<unknown: %x>\n", eType);
+			printf("<unknown: %x>\n", elfType);
 	}
 }
 
-void printEntryPoint(unsigned long int eEntry, unsigned char *eIdent)
-{
+void printEntryPoint(unsigned long int entryPoint, unsigned char *magicNumbers) {
 	printf(" Entry point address: ");
 
-	if (eIdent[EI_DATA] == ELFDATA2MSB)
-	{
-		eEntry = ((eEntry << 8) & 0xFF00FF00) |
-			((eEntry >> 8) & 0xFF00FF);
-		eEntry = (eEntry << 16) | (eEntry >> 16);
+	if (magicNumbers[EI_DATA] == ELFDATA2MSB) {
+		entryPoint = ((entryPoint << 8) & 0xFF00FF00) |
+			((entryPoint >> 8) & 0xFF00FF);
+		entryPoint = (entryPoint << 16) | (entryPoint >> 16);
 	}
 
-	if (eIdent[EI_CLASS] == ELFCLASS32)
-		printf("%#x\n", (unsigned int)eEntry);
-
+	if (magicNumbers[EI_CLASS] == ELFCLASS32)
+		printf("%#x\n", (unsigned int)entryPoint);
 	else
-		printf("%#lx\n", eEntry);
+		printf("%#lx\n", entryPoint);
 }
 
-void closeElf(int elf)
-{
-	if (close(elf) == -1)
-	{
-		dprintf(STDERR_FILENO,
-				"Error: Can't close fd %d\n", elf);
+void closeElfFile(int fileDescriptor) {
+	if (close(fileDescriptor) == -1) {
+		dprintf(STDERR_FILENO, "Error: Can't close file descriptor %d\n", fileDescriptor);
 		exit(98);
 	}
 }
 
-int main(int __attribute__((__unused__)) argc, char *argv[])
-{
+int main(int __attribute__((__unused__)) argc, char *argv[]) {
 	Elf64_Ehdr *header;
-	int fileDescriptor, bytesRead;
+	int fileDescriptor, readResult;
 
 	fileDescriptor = open(argv[1], O_RDONLY);
-	if (fileDescriptor == -1)
-	{
+	if (fileDescriptor == -1) {
 		dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
 		exit(98);
 	}
+
 	header = malloc(sizeof(Elf64_Ehdr));
-	if (header == NULL)
-	{
-		closeElf(fileDescriptor);
-		dprintf(STDERR_FILENO, "Error: Can't read file %s\n", argv[1]);
+	if (header == NULL) {
+		closeElfFile(fileDescriptor);
+		dprintf(STDERR_FILENO, "Error: Can't allocate memory for ELF header\n");
 		exit(98);
 	}
-	bytesRead = read(fileDescriptor, header, sizeof(Elf64_Ehdr));
-	if (bytesRead == -1)
-	{
+
+	readResult = read(fileDescriptor, header, sizeof(Elf64_Ehdr));
+	if (readResult == -1) {
 		free(header);
-		closeElf(fileDescriptor);
+		closeElfFile(fileDescriptor);
 		dprintf(STDERR_FILENO, "Error: `%s`: No such file\n", argv[1]);
 		exit(98);
 	}
 
-	checkElf(header->e_ident);
+	checkIsElfFile(header->e_ident);
 	printf("ELF Header:\n");
 	printMagicNumbers(header->e_ident);
-	printClass(header->e_ident);
-	printData(header->e_ident);
-	printVersion(header->e_ident);
+	printElfClass(header->e_ident);
+	printDataEncoding(header->e_ident);
+	printElfVersion(header->e_ident);
 	printOsAbi(header->e_ident);
 	printAbiVersion(header->e_ident);
 	printElfType(header->e_type, header->e_ident);
 	printEntryPoint(header->e_entry, header->e_ident);
 
 	free(header);
-	closeElf(fileDescriptor);
-	return (0);
+	closeElfFile(fileDescriptor);
+	return 0;
 }
