@@ -1,9 +1,4 @@
 #include "main.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-char *allocate_buffer(char *file);
-void close_file_descriptor(int fd);
 
 /**
  * allocate_buffer - Allocates 1024 bytes for a buffer.
@@ -49,12 +44,7 @@ void close_file_descriptor(int fd)
  * @argc: The number of arguments supplied to the program.
  * @argv: An array of pointers to the arguments.
  *
- * Return: 0 on success.
- *
- * Description: If the argument count is incorrect - exit code 97.
- * If file_from does not exist or cannot be read - exit code 98.
- * If file_to cannot be created or written to - exit code 99.
- * If file_to or file_from cannot be closed - exit code 100.
+ * Return: 0 otherwise return the error code.
  */
 int main(int argc, char *argv[])
 {
