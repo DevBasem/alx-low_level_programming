@@ -1,66 +1,100 @@
 #include "main.h"
 
 /**
- * error_exit - Prints an error message and exits with the given code.
+ * exit_with_error - Prints an error message and exits with the given code.
  * @code: The exit code.
  * @format: The format string for the error message.
  * @...: Additional arguments for the format string.
  */
-void error_exit(int code, const char *format, ...)
+void exit_with_error(int code, const char *format, ...)
 {
-	va_list args;
+    va_list args;
 
-	va_start(args, format);
-	vfprintf(stderr, format, args);
-	va_end(args);
-	exit(code);
+    va_start(args, format);
+    dprintf(STDERR_FILENO, format, args);
+    va_end(args);
+    exit(code);
 }
 
 /**
- * main - Copies the content of a file to another file.
- * @ac: The number of arguments.
- * @av: An array of argument strings.
+ * create_buffer - Allocates a buffer for reading/writing.
  *
- * Return: 0 on success, or the appropriate error code.
+ * Return: A pointer to the newly-allocated buffer.
  */
-int main(int ac, char **av)
+char *create_buffer()
 {
-	int fd_from, fd_to;
-	ssize_t n;
-	char buffer[BUF_SIZE];
-	struct stat st;
-	mode_t dest_file_permissions;
+    char *buffer = malloc(BUFFER_SIZE);
 
-	if (ac != 3)
-		error_exit(97, "Usage: cp file_from file_to\n");
+    if (buffer == NULL)
+    {
+        exit_with_error(99, "Error: Unable to allocate buffer\n");
+    }
 
-	fd_from = open(av[1], O_RDONLY);
-	if (fd_from == -1)
-		error_exit(98, "Error: Can't read from file %s\n", av[1]);
+    return (buffer);
+}
 
-	fd_to = open(av[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd_to == -1)
-		error_exit(99, "Error: Can't write to %s\n", av[2]);
+/**
+ * close_file_descriptor - Closes a file descriptor.
+ * @fd: The file descriptor to be closed.
+ */
+void close_file_descriptor(int fd)
+{
+    if (close(fd) == -1)
+    {
+        dprintf(STDERR_FILENO, "Error: Can't close file descriptor %d\n", fd);
+        exit(100);
+    }
+}
 
-	if (stat(av[2], &st) == -1)
-		error_exit(99, "Error: Can't get file status for %s\n", av[2]);
+/**
+ * main - Copies the contents of a file to another file.
+ * @argc: The number of arguments supplied to the program.
+ * @argv: An array of pointers to the arguments.
+ *
+ * Return: 0 on success, or the appropriate error code on failure.
+ */
+int main(int argc, char *argv[])
+{
+    int source_fd, destination_fd;
+    ssize_t bytes_read;
+    char *buffer;
 
-	dest_file_permissions = st.st_mode & (S_IRWXU | S_IRWXG | S_IRWXO);
+    if (argc != 3)
+    {
+        exit_with_error(97, "Usage: cp source_file destination_file\n");
+    }
 
-	while ((n = read(fd_from, buffer, BUF_SIZE)) > 0)
-	{
-		if (write(fd_to, buffer, n) != n)
-			error_exit(99, "Error: Can't write to %s\n", av[2]);
-	}
+    buffer = create_buffer();
 
-	if (n == -1)
-		error_exit(98, "Error: Can't read from file %s\n", av[1]);
+    source_fd = open(argv[1], O_RDONLY);
+    if (source_fd == -1)
+    {
+        exit_with_error(98, "Error: Can't read from source file %s\n", argv[1]);
+    }
 
-	if (close(fd_from) == -1 || close(fd_to) == -1)
-		error_exit(100, "Error: Can't close fd\n");
+    destination_fd = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (destination_fd == -1)
+    {
+        exit_with_error(99, "Error: Can't write to destination file %s\n", argv[2]);
+    }
 
-	if (chmod(av[2], dest_file_permissions) == -1)
-		error_exit(99, "Error: Can't set permissions for %s\n", av[2]);
+    while ((bytes_read = read(source_fd, buffer, BUFFER_SIZE)) > 0)
+    {
+        ssize_t bytes_written = write(destination_fd, buffer, bytes_read);
+        if (bytes_written != bytes_read)
+        {
+            exit_with_error(99, "Error: Incomplete write to destination file %s\n", argv[2]);
+        }
+    }
 
-	return (0);
+    if (bytes_read == -1)
+    {
+        exit_with_error(98, "Error: Can't read from source file %s\n", argv[1]);
+    }
+
+    close_file_descriptor(source_fd);
+    close_file_descriptor(destination_fd);
+    free(buffer);
+
+    return (0);
 }
