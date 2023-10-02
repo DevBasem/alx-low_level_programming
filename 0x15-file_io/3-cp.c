@@ -41,7 +41,7 @@ void close_file_descriptor(int fd)
 
 /**
  * main - Copies the contents of a file to another file.
- * @argc: The number of arguments supplied to the program.
+ * @argc: The number of arguments.
  * @argv: An array of pointers to the arguments.
  *
  * Return: 0 otherwise return the error code.
@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
 		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
 		exit(97);
 	}
-
 	buffer = allocate_buffer(argv[2]);
 	source_fd = open(argv[1], O_RDONLY);
 	read_bytes = read(source_fd, buffer, 1024);
@@ -79,12 +78,10 @@ int main(int argc, char *argv[])
 			free(buffer);
 			exit(99);
 		}
-
 		read_bytes = read(source_fd, buffer, 1024);
 		destination_fd = open(argv[2], O_WRONLY | O_APPEND);
 
 	} while (read_bytes > 0);
-
 	free(buffer);
 	close_file_descriptor(source_fd);
 	close_file_descriptor(destination_fd);
