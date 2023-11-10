@@ -11,10 +11,11 @@
  */
 int main(int __attribute__((__unused__)) argc, char *argv[])
 {
-	char *cdx = "A-CHRDw87lNS0E9B2TibgpnMVys5XzvtOGJcYLU+4mjW6fxqZeF3Qa1rPhdKIouk";
+	char *cdx;
 	char pass[7];
 	int len = strlen(argv[1]), i, tmp;
 
+	cdx = "A-CHRDw87lNS0E9B2TibgpnMVys5XzvtOGJcYLU+4mjW6fxqZeF3Qa1rPhdKIouk";
 	tmp = (len ^ 59) & 63;
 	pass[0] = cdx[tmp];
 
