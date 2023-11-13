@@ -1,3 +1,3 @@
 #!/bin/bash
-wget -O /tmp/libgiga.so https://github.com/DevBasem/holbertonschool-low_level_programming/raw/master/0x17-dynamic_libraries/libgiga.so
-export LD_PRELOAD=/tmp/libgiga.so
+wget -O ./temp/libgiga.so https://github.com/DevBasem/alx-low_level_programming/raw/main/0x18-dynamic_libraries/libgiga.so
+export LD_PRELOAD=./temp/libgiga.so
