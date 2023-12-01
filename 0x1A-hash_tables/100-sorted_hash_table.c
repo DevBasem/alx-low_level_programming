@@ -15,7 +15,7 @@ int insert_sorted_node(shash_table_t *ht, shash_node_t *new_node)
 	shash_node_t *current, *prev;
 
 	if (ht == NULL || new_node == NULL)
-		return 0;
+		return (0);
 	current = ht->shead;
 	prev = NULL;
 	while (current != NULL && strcmp(new_node->key, current->key) > 0)
@@ -44,7 +44,7 @@ int insert_sorted_node(shash_table_t *ht, shash_node_t *new_node)
 		else
 			current->sprev = new_node;
 	}
-	return 1;
+	return (1);
 }
 
 /**
@@ -56,6 +56,7 @@ int insert_sorted_node(shash_table_t *ht, shash_node_t *new_node)
 shash_table_t *shash_table_create(unsigned long int size)
 {
 	shash_table_t *ht = malloc(sizeof(shash_table_t));
+
 	if (ht == NULL)
 		return (NULL);
 
@@ -84,13 +85,13 @@ shash_table_t *shash_table_create(unsigned long int size)
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 {
 	unsigned long int index;
-	shash_node_t *new_node, *temp;
+	shash_node_t *temp;
+	shash_node_t *new_node;
 
 	if (ht == NULL || key == NULL || value == NULL)
 		return (0);
 
 	index = key_index((unsigned char *)key, ht->size);
-
 	temp = ht->array[index];
 	while (temp != NULL)
 	{
@@ -102,42 +103,27 @@ int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 		}
 		temp = temp->next;
 	}
-
 	new_node = malloc(sizeof(shash_node_t));
 	if (new_node == NULL)
 		return (0);
-
 	new_node->key = strdup(key);
-	if (new_node->key == NULL)
-	{
-		free(new_node);
-		return (0);
-	}
-
-	new_node->value = strdup(value);
-	if (new_node->value == NULL)
-	{
-		free(new_node->key);
-		free(new_node);
-		return (0);
-	}
-
-	new_node->next = ht->array[index];
-	ht->array[index] = new_node;
-
-	if (insert_sorted_node(ht, new_node) == 0)
+	new_node->value = (new_node->key == NULL) ? NULL : strdup(value);
+	if (new_node->value == NULL ||
+			(new_node->key != NULL && insert_sorted_node(ht, new_node) == 0))
 	{
 		free(new_node->key);
 		free(new_node->value);
 		free(new_node);
 		return (0);
 	}
-
+	new_node->next = ht->array[index];
+	ht->array[index] = new_node;
 	return (1);
 }
 
 /**
- * shash_table_get - Retrieves a value associated with a key in the sorted hash table
+ * shash_table_get - Retrieves a value associated with
+ * a key in the sorted hash table
  * @ht: The hash table
  * @key: The key
  *
@@ -188,7 +174,8 @@ void shash_table_print(const shash_table_t *ht)
 }
 
 /**
- * shash_table_print_rev - Prints the hash table in reverse order using the sorted linked list
+ * shash_table_print_rev - Prints the hash table in reverse order
+ * using the sorted linked list
  * @ht: The hash table
  */
 void shash_table_print_rev(const shash_table_t *ht)
