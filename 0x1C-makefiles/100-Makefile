@@ -7,8 +7,8 @@ RM = rm -f
 
 .PHONY: all clean oclean fclean re
 
-all: $(OBJ)
-	$(CC) $(OBJ) -o $@ $(CFLAGS)
+all: m.h $(OBJ)
+	$(CC) $(OBJ) -o $(NAME) $(CFLAGS)
 
 %.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
@@ -23,5 +23,3 @@ fclean: clean oclean
 	$(RM) $(NAME)
 
 re: fclean all
-
-$(OBJ): m.h
