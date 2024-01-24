@@ -10,9 +10,6 @@ RM = rm -f
 all: m.h $(OBJ)
 	$(CC) $(OBJ) -o $(NAME) $(CFLAGS)
 
-%.o: %.c
-	$(CC) -c $< -o $@ $(CFLAGS)
-
 clean:
 	$(RM) *~ $(NAME)
 
