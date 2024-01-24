@@ -1,19 +1,23 @@
 CC = gcc
-SRC = main.c school.c
-OBJ = $(SRC:.c=.o)
-NAME = school
-CFLAGS = -Wall -Werror -Wextra -pedantic
+SRC_FILES = main.c school.c
+OBJ_FILES = $(SRC_FILES:.c=.o)
+EXEC_NAME = school
+COMPILER_FLAGS = -Wall -Werror -Wextra -pedantic
+RM = rm -f
 
 .PHONY: all clean oclean fclean re
 
-all: m.h $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+all: m.h $(OBJ_FILES)
+	$(CC) $(OBJ_FILES) -o $(EXEC_NAME) $(COMPILER_FLAGS)
+
+%.o: %.c m.h
+	$(CC) -c $< -o $@ $(COMPILER_FLAGS)
 
 clean:
-	$(RM) *~ $(NAME)
+	$(RM) *~ $(EXEC_NAME)
 
 oclean:
-	$(RM) $(OBJ)
+	$(RM) $(OBJ_FILES)
 
 fclean: clean oclean
 
